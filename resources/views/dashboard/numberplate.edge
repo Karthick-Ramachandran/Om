@@ -1,0 +1,49 @@
+@layout('dashboard.layouts.app')
+
+
+@section('content')
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-xl-12 col-lg-12">
+            <div class="card text-center">
+                <div class="card-body">
+                    <div class="card-title">Number Plate Recognition</div>
+                    <div class="table-responsive">
+                        <table id="zero_config" class="table table-striped table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Data</th>
+                                    <th>Created Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @each(repo in data)
+                                <tr>
+                                    <td>
+                                        @if(repo.type == 'image')
+                                        <center>
+                                            <img src="{{ assetsUrl(repo.asset) }}" width="300" height="240"
+                                                alt="{{ data.asset }}" srcset="">
+                                        </center>
+                                        @endif
+                                        @if(repo.type == 'video')
+                                        <video width="300px" height="300px" controls>
+                                            <source src="{{ assetsUrl(repo.asset) }}" type="video/mp4">
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        @endif
+
+                                    </td>
+                                    <td>
+                                        {{ repo.created_at }}
+                                    </td>
+                                </tr>
+                                @endeach
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @endsection

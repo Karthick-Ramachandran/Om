@@ -1,0 +1,150 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>view</title>
+<script type="text/javascript" >
+function getOs()
+{
+   	var Sys = {};
+	var ua = navigator.userAgent.toLowerCase();
+	var s;
+	(s = ua.match(/msie ([\d.]+)/)) ? Sys.ie = s[1] :
+	(s = ua.match(/firefox\/([\d.]+)/)) ? Sys.firefox = s[1] :
+	(s = ua.match(/chrome\/([\d.]+)/)) ? Sys.chrome = s[1] :
+	(s = ua.match(/opera.([\d.]+)/)) ? Sys.opera = s[1] :
+	(s = ua.match(/version\/([\d.]+).*safari/)) ? Sys.safari = s[1] : 0;
+	if (Sys.ie) {
+		return "MSIE";
+	}
+	if (Sys.firefox) {
+		return "Firefox";
+   }
+	if (Sys.chrome){
+		return "Chrome";
+   }
+	if (Sys.opera) {
+		return "Opera";
+   }
+	if (Sys.safari)  {
+		return "Safari";
+   } 
+}
+
+function setobject(){
+	if(getOs()=='MSIE'){
+	document.getElementById("activex").innerHTML = '<object  classid="clsid:F62AA720-F0D8-460E-8C2C-AFBF8860ACB2" codebase="playeractivex/PlayerActiveX.cab#version=1,0,9,0"  id="PlayerActiveX"   style=" background:#6699CC; "   width="522" height="442" title="Please wait..." ><param name="quality" value="high"><param name="wmode" value="Opaque"><embed  quality="high" wmode="transparent"   style=" background:url(images/1.jpg); background:#6699CC;"></embed> </object>'
+	} else if(getOs()=='Firefox' || getOs()=='Chrome'){
+	document.getElementById("activex").innerHTML = '<embed id="PlayerActiveX"  pluginspage="playeractivex/Viewerplugins.xpi" width="522" height="442" type="application/NPActiveX-plugin" wmode="transparent"  style=" background:url(images/1.jpg); background:#6699CC;width:522px;  height:442px;" logger="ErrLog" EventReady="EventReady" EventCameraListReady = "EventCameraListReady" EventGroupAppend = "EventGroupAppend" EventCameraAppend = "EventCameraAppend" EventCameraType = "EventCameraType" EventCameraQuality = "EventCameraQuality" EventCameraExInfo = "EventCameraExInfo" EventGetPreset = "EventGetPreset" EventRecordDate = "EventRecordDate" EventRecordHour = "EventRecordHour"  EventRecordMinu = "EventRecordMinu" EventRecordDateJump = "EventRecordDateJump" EventRecordHourJump = "EventRecordHourJump" EventRecordMinuJump = "EventRecordMinuJump" EventRecordSecoJump = "EventRecordSecoJump" EventActiveChange = "EventActiveChange" EventVideoSizeChange = "EventVideoSizeChange" EventVolumeChange = "EventVolumeChange" EventCameraPlaybackFinish = "EventCameraPlaybackFinish"  EventCameraRecordQuality = "EventCameraRecordQuality"  EventCameraMSExInfo = "EventCameraMSExInfo"  EventCameraMove = "EventCameraMove"  EventGroupMove = "EventGroupMove" EventMicVolumeChange = "EventMicVolumeChange"></embed>';
+	} 
+	else {
+		document.getElementById("activex").innerHTML = ''
+	}
+}
+
+var cameraid;
+function EventReady()
+{
+    //Detail：'59.120.158.166' dserver IP address (Where you select which Dserver in Camsetup)
+  	//		   3478 dserver port
+	//		   user name
+ 	//         password
+	// PlayerActiveX.Login('209.169.14.240',3478,'username','password');
+	PlayerActiveX.Login('209.169.14.240',3478,'username','password');
+	PlayerActiveX.SetLanguage(0x0009);
+}
+//EventCameraListReady Initializaton must be successful，IP cam can work
+function EventCameraListReady(Server)
+{
+    // QIAWQMX2O5OIS1AB021O Camera device ID you find in Camsetup
+	//var strSerial = "CameraID";
+	var strSerial = "CameraID";
+
+	cameraid = GetCameraID(strSerial);
+	PlayerActiveX.Play(cameraid);
+	//Whether the video channel connects to PTZ IP cam
+	PlayerActiveX.SwitchPTZPosControl(1);
+}
+
+//Verify Camera ID
+function GetCameraID(strSerial)
+{
+	return PlayerActiveX.GetCameraID(strSerial);
+}
+
+//Verify camera serial number
+function GetCameraSerial(Camera)
+{
+	return PlayerActiveX.GetCameraSerial(Camera);
+}
+//Stop Camera
+function Stop()
+{
+	PlayerActiveX.Stop(GetActiveCamera());
+}
+// Camera that is in display with ActiveX
+function GetActiveCamera()
+{
+	if(typeof(PlayerActiveX) == "object")
+	{
+		if(PlayerActiveX.GetActiveCamera()!=0)
+		{
+		return PlayerActiveX.GetActiveCamera();
+		}
+	}	
+	
+}
+
+function clickone()
+{
+   if(document.getElementById("one").value=="Stop")
+   {
+	 Stop();
+	document.getElementById("one").value ='Play'; 
+   }
+   else
+   {
+	PlayerActiveX.Play(cameraid);
+	document.getElementById("one").value ='Stop'; 
+   }
+
+  
+}
+function showchorme()
+{
+	if(getOs()=='MSIE' || getOs()=='Firefox'){
+	document.getElementById("downloadchrome").style.visibility = 'hidden';
+	} else if( getOs()=='Chrome'){
+	document.getElementById("downloadchrome").style.visibility = 'visible';
+	} 
+}
+</script>
+<script language="javascript" event="EventReady" for="PlayerActiveX" >
+	EventReady();
+</script>
+
+<script language="javascript" event="EventCameraListReady(Server)" for="PlayerActiveX" >
+	EventCameraListReady(Server);
+</script>
+</head>
+
+<body onload="showchorme();setobject();">
+<table  align="center" border="0"  >
+  <tr>
+    <td  align="center" >
+      <!--<object classid="clsid:F62AA720-F0D8-460E-8C2C-AFBF8860ACB2" codebase="PlayerActiveX.cab#version=1,0,4,0"  id="PlayerActiveX" width="522" height="442" alt="Please wait..." >
+        <embed width="522" height="442"></embed>
+      </object>-->
+	  	<div id="activex" ></div>
+		<div id="downloadchrome" style="visibility:hidden; ">please <a href="playeractivex/Viewerplugins1090.exe"> download </a> latest plug-in installed, during the installation process, close the browser</div>
+    </td>
+  </tr>
+<tr>
+    <td  align="center">
+      <input type="button" name="one"  id="one" onclick="clickone()" value="Stop" />
+    </td>
+	</tr>
+
+</table>
+</body>
+</html>
