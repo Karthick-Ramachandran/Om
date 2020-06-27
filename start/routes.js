@@ -39,16 +39,24 @@ Route.group(() => {
 
   Route.get("/wanted", "AdminController.wanted");
   Route.get("/face/recognition", "RecognitionController.face");
-  Route.get("/object/recognition", "RecognitionController.object");
+  Route.get("/object/recognition", "ObjectDetecController.data");
+  Route.get("/object/recognition/get", "ObjectDetecController.form");
+  Route.post("/object/recognition/get", "ObjectDetecController.postUpload").as(
+    "ups"
+  );
+  Route.get("/object/recognition/all", "ObjectDetecController.getAll");
   Route.get("/number-plate", "RecognitionController.numberPlate");
 })
   .prefix("/dashboard")
   .middleware(["Threeway"]);
 Route.get("/api/nodes", "MappingController.nodes");
+Route.get("/process", "LoveController.data");
 Route.get("/api/edges", "MappingController.edges");
 Route.get("/api/date", "MappingController.compare");
 Route.get("/camera", "MappingController.camera");
+Route.get("/api/json", "ObjectDetecController.dataApi");
 
 Route.get("*", ({ view }) => {
   return view.render("dashboard.layouts.app");
 });
+

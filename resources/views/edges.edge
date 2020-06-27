@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+  </head>
+  <body>
+    <center>
+      <h1>The video is processing.....</h1>
+    </center>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+    <script>
+      axios.get("http://66.85.75.154:6557/api/json").then(data => {
+        console.log(data.data);
+        axios
+          .post("http://66.85.75.154:6551/api/v1/object_detection_video", {
+            video_path: `/home/Om/public/object/${data.data.image}`,
+            output_path: `/home/Om/public/${data.data.image}`
+          })
+          .then(data => {
+            console.log(data);
+          });
+        axios
+          .post("http://66.85.75.154:6552/api/v1/face_detection", {
+            input_path: `/home/Om/public/object/${data.data.image}`
+          })
+          .then(data => {
+            console.log(data);
+          });
+      });
+    </script>
+  </body>
+</html>
+
